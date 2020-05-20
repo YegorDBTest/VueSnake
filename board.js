@@ -29,7 +29,7 @@ class Board {
     this.ctx.clearRect(0, 0, this.width, this.height);
     for (let x = 0; x < this.lx; x++) {
       for (let y = 0; y < this.ly; y++) {
-        this.fillSquare(new Square(x, y), '#ccc');
+        this.fillSquare(new Square(x, y), BOARD_COLOR);
       }
     }
   }
