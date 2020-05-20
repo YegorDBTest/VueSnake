@@ -1,3 +1,11 @@
+const directionsByNumber = {
+  37: 'left',
+  38: 'up',
+  39: 'right',
+  40: 'down',
+};
+
+
 class SnakeDirection {
 
   constructor(direction) {
@@ -22,6 +30,10 @@ class SnakeDirection {
 
   get left() {
     return {x: -1, y: 0};
+  }
+
+  setCurrent(directionNumber) {
+    this.current = directionsByNumber[directionNumber] || this.current;
   }
 }
 
@@ -67,21 +79,24 @@ class Snake {
     this.board = board;
     this.stopped = false;
     this.putOnBoard();
+    this.setDirectionChangeEvents();
     this.start();
   }
 
   move() {
-    let newHead = new Square(this.head.x + this.direction.change.x, this.head.y + this.direction.change.y);
+    let newHeadX = this.squares.head.x + this.direction.change.x;
+    let newHeadY = this.squares.head.y + this.direction.change.y;
+    let newHead = new Square(newHeadX, newHeadY);
     
-    if (!this.board.checkSquareLegal(newHead)) {
+    if (!this.board.checkSquareLegal(newHead) || this.squares.includes(newHead)) {
       this.stop();
       return;
     }
 
-    this.squares.unshift(newHead);
-    this.board.fillSquare(this.head, SNAKE_COLOR);
-    this.board.fillSquare(this.tail, BOARD_COLOR);
-    this.squares.splice(-1);
+    this.squares.addFirst(newHead);
+    this.board.fillSquare(this.squares.head, SNAKE_COLOR);
+    this.board.fillSquare(this.squares.tail, BOARD_COLOR);
+    this.squares.removeLast();
   }
 
   draw(color) {
@@ -92,6 +107,12 @@ class Snake {
 
   putOnBoard() {
     this.draw(SNAKE_COLOR);
+  }
+
+  setDirectionChangeEvents() {
+    document.addEventListener('keydown', (e) => {
+      this.direction.setCurrent(e.keyCode);
+    });
   }
 
   stop() {
