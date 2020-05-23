@@ -64,7 +64,7 @@ class SnakeSquares {
   }
 
   includes(square) {
-    return this.items.filter(s => s.x == square.x && s.y == square.y).length > 0;
+    return this.items.slice(0, -1).filter(s => s.x == square.x && s.y == square.y).length > 0;
   }
 
   get head() {
@@ -108,8 +108,8 @@ class Snake {
     }
 
     this.squares.addFirst(newHead);
-    this.board.fillSquare(this.squares.head, SNAKE_COLOR);
     this.board.fillSquare(this.squares.tail, BOARD_COLOR);
+    this.board.fillSquare(this.squares.head, SNAKE_COLOR);
     this.squares.removeLast();
     this.direction.setLastByCurent();
   }
