@@ -4,12 +4,19 @@ const directionsByNumber = {
   39: 'right',
   40: 'down',
 };
+const oppositeDirections = {
+  'up': 'down',
+  'right': 'left',
+  'down': 'up',
+  'left': 'right',
+}
 
 
 class SnakeDirection {
 
   constructor(direction) {
     this.current = direction;
+    this.last = direction;
   }
 
   get change() {
@@ -32,8 +39,15 @@ class SnakeDirection {
     return {x: -1, y: 0};
   }
 
+  setLastByCurent() {
+    this.last = this.current;
+  }
+
   setCurrent(directionNumber) {
-    this.current = directionsByNumber[directionNumber] || this.current;
+    let newDirection = directionsByNumber[directionNumber];
+    if (newDirection && oppositeDirections[this.last] != newDirection) {
+      this.current = newDirection;
+    }
   }
 }
 
@@ -97,6 +111,7 @@ class Snake {
     this.board.fillSquare(this.squares.head, SNAKE_COLOR);
     this.board.fillSquare(this.squares.tail, BOARD_COLOR);
     this.squares.removeLast();
+    this.direction.setLastByCurent();
   }
 
   draw(color) {
