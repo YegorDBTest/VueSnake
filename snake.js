@@ -19,26 +19,6 @@ class SnakeDirection {
     this.last = direction;
   }
 
-  get change() {
-    return this[this.current];
-  }
-
-  get up() {
-    return {x: 0, y: -1};
-  }
-
-  get right() {
-    return {x: 1, y: 0};
-  }
-
-  get down() {
-    return {x: 0, y: 1};
-  }
-
-  get left() {
-    return {x: -1, y: 0};
-  }
-
   setLastByCurent() {
     this.last = this.current;
   }
@@ -56,11 +36,12 @@ class SnakeSquares {
 
   constructor(squares) {
     this.items = squares;
-    this[Symbol.iterator] = function* () {
-      for (let item of this.items) {
-        yield item;
-      }
-    };
+  }
+
+  *[Symbol.iterator]() {
+    for (let item of this.items) {
+      yield item;
+    }
   }
 
   includes(square) {
@@ -87,7 +68,11 @@ class SnakeSquares {
 
 class Snake {
 
-  constructor(squares, direction, board) {
+  constructor(squaresCoords, direction, board) {
+    let squares = [];
+    for (let squareCoords of squaresCoords) {
+      squares.push(board.squares.getFromCoords(...squareCoords))
+    }
     this.squares = new SnakeSquares(squares);
     this.direction = new SnakeDirection(direction);
     this.board = board;
@@ -98,25 +83,22 @@ class Snake {
   }
 
   move() {
-    let newHeadX = this.squares.head.x + this.direction.change.x;
-    let newHeadY = this.squares.head.y + this.direction.change.y;
-    let newHead = new Square(newHeadX, newHeadY);
-    
-    if (!this.board.checkSquareLegal(newHead) || this.squares.includes(newHead)) {
+    let newHead = this.squares.head[this.direction.current];
+    if (!newHead || this.squares.includes(newHead)) {
       this.stop();
       return;
     }
 
     this.squares.addFirst(newHead);
-    this.board.fillSquare(this.squares.tail, BOARD_COLOR);
-    this.board.fillSquare(this.squares.head, SNAKE_COLOR);
+    this.squares.tail.fill(BOARD_COLOR);
+    this.squares.head.fill(SNAKE_COLOR);
     this.squares.removeLast();
     this.direction.setLastByCurent();
   }
 
   draw(color) {
     for (let square of this.squares) {
-      this.board.fillSquare(square, color);
+      square.fill(color);
     }
   }
 

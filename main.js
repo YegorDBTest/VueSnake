@@ -1,10 +1,2 @@
-var board = new Board(40, 20);
-
-let snakeSquares = [
-  new Square(5, 10),
-  new Square(5, 11),
-  new Square(5, 12),
-  new Square(5, 13),
-  new Square(5, 14)
-];
-var snake = new Snake(snakeSquares, 'up', board);
+var board = new Board(40, 20, 20);
+var snake = new Snake([[5, 10] ,[5, 11] ,[5, 12] ,[5, 13] ,[5, 14]], 'up', board);
