@@ -89,21 +89,30 @@ class Snake {
       return;
     }
 
+    let newHeadState = newHead.state;
+
     this.squares.addFirst(newHead);
-    this.squares.tail.fill(BOARD_COLOR);
-    this.squares.head.fill(SNAKE_COLOR);
-    this.squares.removeLast();
+    if (newHeadState != SQUARE_GROWING) {
+      this.squares.tail.setState(SQUARE_NORMAL);
+      this.squares.removeLast();
+    }
+    this.squares.head.setState(SQUARE_SNAKE);
     this.direction.setLastByCurent();
+
+    if (newHeadState != SQUARE_NORMAL) {
+      this.board.addThing(newHeadState, this.squares.items);
+    }
   }
 
-  draw(color) {
+  draw(squareState) {
     for (let square of this.squares) {
-      square.fill(color);
+      square.setState(squareState);
     }
   }
 
   putOnBoard() {
-    this.draw(SNAKE_COLOR);
+    this.draw(SQUARE_SNAKE);
+    this.board.addThing(SQUARE_GROWING, this.squares.items);
   }
 
   setDirectionChangeEvents() {
@@ -114,7 +123,7 @@ class Snake {
 
   stop() {
     this.stopped = true;
-    this.draw(STOPPED_SNAKE_COLOR);
+    this.draw(SQUARE_STOPPED_SNAKE);
   }
 
   start() {
@@ -126,7 +135,8 @@ class Snake {
           this.move();
         }
       },
-      1000
+      // 1000
+      500
     );
   }
 }
