@@ -1,12 +1,23 @@
 const SQUARE_NORMAL = 'normal';
 const SQUARE_SNAKE = 'snake';
 const SQUARE_STOPPED_SNAKE = 'stoppedSnake';
+const SQUARE_SPEED_UP_SNAKE = 'speedUpSnake';
+const SQUARE_SPEED_DOWN_SNAKE = 'speedDownSnake';
 const SQUARE_GROWING = 'growing';
-const SQUARE_STATES = [SQUARE_NORMAL, SQUARE_SNAKE, SQUARE_STOPPED_SNAKE, SQUARE_GROWING];
+const SQUARE_STATES = [
+  SQUARE_NORMAL,
+  SQUARE_SNAKE,
+  SQUARE_STOPPED_SNAKE,
+  SQUARE_SPEED_UP_SNAKE,
+  SQUARE_SPEED_DOWN_SNAKE,
+  SQUARE_GROWING,
+];
 const SQUARE_COLORS = {
   [SQUARE_NORMAL]: BOARD_COLOR,
   [SQUARE_SNAKE]: SNAKE_COLOR,
   [SQUARE_STOPPED_SNAKE]: STOPPED_SNAKE_COLOR,
+  [SQUARE_SPEED_UP_SNAKE]: SPEED_UP_SNAKE_COLOR,
+  [SQUARE_SPEED_DOWN_SNAKE]: SPEED_DOWN_SNAKE_COLOR,
   [SQUARE_GROWING]: GROWING_COLOR,
 };
 
@@ -98,7 +109,6 @@ class BoardSquares {
   getRandom(excludeSquares=null) {
     excludeSquares = excludeSquares || [];
     let items = this.items.filter(s => !excludeSquares.includes(s));
-    console.log('items.length', items.length);
     return items[Math.floor(Math.random() * items.length)];
   }
 }
@@ -117,10 +127,28 @@ class Board {
     this.ctx.clearRect(0, 0, this.width, this.height);
 
     this.squares = new BoardSquares(maxX, maxY, squareL, this);
+
+    this.speedUpSquare = null;
+    this.speedDownSquare = null;
   }
 
-  addThing(state, snakeSquares) {
-    let square = this.squares.getRandom(snakeSquares);
-    square.setState(state);
+  addThings(occupiedSquares) {
+    if (this.speedUpSquare && this.speedUpSquare.state == SQUARE_SPEED_UP_SNAKE) {
+      this.speedUpSquare.setState(SQUARE_NORMAL);
+    }
+    if (this.speedDownSquare && this.speedDownSquare.state == SQUARE_SPEED_DOWN_SNAKE) {
+      this.speedDownSquare.setState(SQUARE_NORMAL);
+    }
+
+    let square = this.squares.getRandom(occupiedSquares);
+    square.setState(SQUARE_GROWING);
+    occupiedSquares.push(square);
+
+    this.speedUpSquare = this.squares.getRandom(occupiedSquares);
+    this.speedUpSquare.setState(SQUARE_SPEED_UP_SNAKE);
+    occupiedSquares.push(this.speedUpSquare);
+
+    this.speedDownSquare = this.squares.getRandom(occupiedSquares);
+    this.speedDownSquare.setState(SQUARE_SPEED_DOWN_SNAKE);
   }
 }

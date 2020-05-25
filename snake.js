@@ -77,6 +77,7 @@ class Snake {
     this.direction = new SnakeDirection(direction);
     this.board = board;
     this.stopped = false;
+    this.points = 0;
     this.putOnBoard();
     this.setDirectionChangeEvents();
     this.start();
@@ -99,8 +100,10 @@ class Snake {
     this.squares.head.setState(SQUARE_SNAKE);
     this.direction.setLastByCurent();
 
-    if (newHeadState != SQUARE_NORMAL) {
-      this.board.addThing(newHeadState, this.squares.items);
+    if (newHeadState == SQUARE_GROWING) {
+      this.board.addThings(this.squares.items.slice());
+      this.points += 100;
+      console.log(this.points);
     }
   }
 
@@ -112,7 +115,7 @@ class Snake {
 
   putOnBoard() {
     this.draw(SQUARE_SNAKE);
-    this.board.addThing(SQUARE_GROWING, this.squares.items);
+    this.board.addThings(this.squares.items.slice());
   }
 
   setDirectionChangeEvents() {
