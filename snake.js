@@ -1,3 +1,7 @@
+const SNAKE_NORMAL_SPEED_FACTOR = 1;
+const SNAKE_SPEED_UP_FACTOR = 2;
+const SNAKE_SPEED_DOWN_FACTOR = 0.5;
+
 const directionsByNumber = {
   37: 'left',
   38: 'up',
@@ -73,11 +77,14 @@ class Snake {
     for (let squareCoords of squaresCoords) {
       squares.push(board.squares.getFromCoords(...squareCoords))
     }
+    this.state = SQUARE_SNAKE;
     this.squares = new SnakeSquares(squares);
     this.direction = new SnakeDirection(direction);
     this.board = board;
-    this.stopped = false;
     this.points = 0;
+    this.speed = 1;
+    this.speedFactor = SNAKE_NORMAL_SPEED_FACTOR;
+    this.intervalId = null;
     this.putOnBoard();
     this.setDirectionChangeEvents();
     this.start();
@@ -97,24 +104,32 @@ class Snake {
       this.squares.tail.setState(SQUARE_NORMAL);
       this.squares.removeLast();
     }
-    this.squares.head.setState(SQUARE_SNAKE);
+    this.squares.head.setState(this.state);
     this.direction.setLastByCurent();
 
     if (newHeadState == SQUARE_GROWING) {
       this.board.addThings(this.squares.items.slice());
       this.points += 100;
       console.log(this.points);
+      this.changeSpeedFactor(SNAKE_NORMAL_SPEED_FACTOR);
+      this.changeState(SQUARE_SNAKE);
+    } else if (newHeadState == SQUARE_SPEED_UP_SNAKE) {
+      this.changeSpeedFactor(SNAKE_SPEED_UP_FACTOR);
+      this.changeState(SQUARE_SPEED_UP_SNAKE);
+    } else if (newHeadState == SQUARE_SPEED_DOWN_SNAKE) {
+      this.changeSpeedFactor(SNAKE_SPEED_DOWN_FACTOR);
+      this.changeState(SQUARE_SPEED_DOWN_SNAKE);
     }
   }
 
-  draw(squareState) {
+  draw() {
     for (let square of this.squares) {
-      square.setState(squareState);
+      square.setState(this.state);
     }
   }
 
   putOnBoard() {
-    this.draw(SQUARE_SNAKE);
+    this.draw();
     this.board.addThings(this.squares.items.slice());
   }
 
@@ -124,22 +139,30 @@ class Snake {
     });
   }
 
+  changeState(state) {
+    this.state = state;
+    this.draw();
+  }
+
+  changeSpeedFactor(factor) {
+    this.pause();
+    this.speedFactor = factor;
+    this.start();
+  }
+
+  pause() {
+    clearInterval(this.intervalId);
+  }
+
   stop() {
-    this.stopped = true;
-    this.draw(SQUARE_STOPPED_SNAKE);
+    clearInterval(this.intervalId);
+    this.changeState(SQUARE_STOPPED_SNAKE);
   }
 
   start() {
-    let intervalId = setInterval(
-      () => {
-        if (this.stopped) {
-          clearInterval(intervalId);
-        } else {
-          this.move();
-        }
-      },
-      // 1000
-      500
+    this.intervalId = setInterval(
+      () => {this.move();},
+      500 / (this.speed * this.speedFactor)
     );
   }
 }
