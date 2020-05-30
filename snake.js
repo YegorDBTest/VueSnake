@@ -1,7 +1,3 @@
-const SNAKE_NORMAL_SPEED_FACTOR = 1;
-const SNAKE_SPEED_UP_FACTOR = 2;
-const SNAKE_SPEED_DOWN_FACTOR = 0.5;
-
 const directionsByNumber = {
   37: 'left',
   38: 'up',
@@ -82,8 +78,7 @@ class Snake {
     this.direction = new SnakeDirection(direction);
     this.board = board;
     this.points = 0;
-    this.speed = 1;
-    this.speedFactor = SNAKE_NORMAL_SPEED_FACTOR;
+    this.speed = 10;
     this.intervalId = null;
     this.putOnBoard();
     this.setDirectionChangeEvents();
@@ -109,16 +104,12 @@ class Snake {
 
     if (newHeadState == SQUARE_GROWING) {
       this.board.addThings(this.squares.items.slice());
-      this.points += 100;
-      console.log(this.points);
-      this.changeSpeedFactor(SNAKE_NORMAL_SPEED_FACTOR);
-      this.changeState(SQUARE_SNAKE);
+      this.points += 10 * this.speed;
+      console.log('points', this.points);
     } else if (newHeadState == SQUARE_SPEED_UP_SNAKE) {
-      this.changeSpeedFactor(SNAKE_SPEED_UP_FACTOR);
-      this.changeState(SQUARE_SPEED_UP_SNAKE);
+      this.changeSpeed(1);
     } else if (newHeadState == SQUARE_SPEED_DOWN_SNAKE) {
-      this.changeSpeedFactor(SNAKE_SPEED_DOWN_FACTOR);
-      this.changeState(SQUARE_SPEED_DOWN_SNAKE);
+      this.changeSpeed(-1);
     }
   }
 
@@ -144,10 +135,17 @@ class Snake {
     this.draw();
   }
 
-  changeSpeedFactor(factor) {
+  changeSpeed(delta) {
     this.pause();
-    this.speedFactor = factor;
+    this.speed += delta;
+    if (this.speed < 1) {
+      this.stop();
+      return;
+    } else if (this.speed > 100) {
+      this.speed = 100;
+    }
     this.start();
+    console.log("speed", this.speed);
   }
 
   pause() {
@@ -162,7 +160,7 @@ class Snake {
   start() {
     this.intervalId = setInterval(
       () => {this.move();},
-      500 / (this.speed * this.speedFactor)
+      5000 / this.speed
     );
   }
 }
