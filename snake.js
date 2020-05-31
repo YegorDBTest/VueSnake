@@ -63,6 +63,13 @@ class SnakeSquares {
   removeLast() {
     this.items.splice(-1);
   }
+
+  dropTail() {
+    let dropped = this.items.splice(3, this.items.length - 3);
+    for (let square of dropped) {
+      square.setState(SQUARE_NORMAL);
+    }
+  }
 }
 
 
@@ -110,6 +117,8 @@ class Snake {
       this.changeSpeed(1);
     } else if (newHeadState == SQUARE_SPEED_DOWN_SNAKE) {
       this.changeSpeed(-1);
+    } else if (newHeadState == SQUARE_DROP_TAIL_SNAKE) {
+      this.squares.dropTail();
     }
   }
 

@@ -3,6 +3,7 @@ const SQUARE_SNAKE = 'snake';
 const SQUARE_STOPPED_SNAKE = 'stoppedSnake';
 const SQUARE_SPEED_UP_SNAKE = 'speedUpSnake';
 const SQUARE_SPEED_DOWN_SNAKE = 'speedDownSnake';
+const SQUARE_DROP_TAIL_SNAKE = 'dropTailSnake';
 const SQUARE_GROWING = 'growing';
 const SQUARE_STATES = [
   SQUARE_NORMAL,
@@ -10,6 +11,7 @@ const SQUARE_STATES = [
   SQUARE_STOPPED_SNAKE,
   SQUARE_SPEED_UP_SNAKE,
   SQUARE_SPEED_DOWN_SNAKE,
+  SQUARE_DROP_TAIL_SNAKE,
   SQUARE_GROWING,
 ];
 const SQUARE_COLORS = {
@@ -18,6 +20,7 @@ const SQUARE_COLORS = {
   [SQUARE_STOPPED_SNAKE]: STOPPED_SNAKE_COLOR,
   [SQUARE_SPEED_UP_SNAKE]: SPEED_UP_SNAKE_COLOR,
   [SQUARE_SPEED_DOWN_SNAKE]: SPEED_DOWN_SNAKE_COLOR,
+  [SQUARE_DROP_TAIL_SNAKE]: DROP_TAIL_SNAKE_COLOR,
   [SQUARE_GROWING]: GROWING_COLOR,
 };
 
@@ -130,6 +133,9 @@ class Board {
 
     this.speedUpSquare = null;
     this.speedDownSquare = null;
+    this.dropTailSquare = null;
+
+    this.toDropTail = DROP_TAIL_PERIODICITY;
   }
 
   addThings(occupiedSquares) {
@@ -138,6 +144,9 @@ class Board {
     }
     if (this.speedDownSquare && this.speedDownSquare.state == SQUARE_SPEED_DOWN_SNAKE) {
       this.speedDownSquare.setState(SQUARE_NORMAL);
+    }
+    if (this.dropTailSquare && this.dropTailSquare.state == SQUARE_DROP_TAIL_SNAKE) {
+      this.dropTailSquare.setState(SQUARE_NORMAL);
     }
 
     let square = this.squares.getRandom(occupiedSquares);
@@ -150,5 +159,14 @@ class Board {
 
     this.speedDownSquare = this.squares.getRandom(occupiedSquares);
     this.speedDownSquare.setState(SQUARE_SPEED_DOWN_SNAKE);
+
+    if (this.toDropTail == 0) {
+      occupiedSquares.push(this.speedUpSquare);
+      this.dropTailSquare = this.squares.getRandom(occupiedSquares);
+      this.dropTailSquare.setState(SQUARE_DROP_TAIL_SNAKE);
+      this.toDropTail = DROP_TAIL_PERIODICITY;
+    } else {
+      this.toDropTail--;
+    }
   }
 }
