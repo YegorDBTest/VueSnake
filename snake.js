@@ -84,12 +84,34 @@ class Snake {
     this.squares = new SnakeSquares(squares);
     this.direction = new SnakeDirection(direction);
     this.board = board;
-    this.points = 0;
-    this.speed = 10;
+    this._points = new Vue({
+      el: '#points',
+      data: {value: 0},
+    });
+    this._speed = new Vue({
+      el: '#speed',
+      data: {value: 10},
+    });
     this.intervalId = null;
     this.putOnBoard();
     this.setDirectionChangeEvents();
     this.start();
+  }
+
+  get speed() {
+    return this._speed.value;
+  }
+
+  set speed(value) {
+    this._speed.value = value;
+  }
+
+  get points() {
+    return this._points.value;
+  }
+
+  set points(value) {
+    this._points.value = value;
   }
 
   move() {
@@ -112,7 +134,6 @@ class Snake {
     if (newHeadState == SQUARE_GROWING) {
       this.board.addThings(this.squares.items.slice());
       this.points += 10 * this.speed;
-      console.log('points', this.points);
     } else if (newHeadState == SQUARE_SPEED_UP_SNAKE) {
       this.changeSpeed(1);
     } else if (newHeadState == SQUARE_SPEED_DOWN_SNAKE) {
@@ -154,7 +175,6 @@ class Snake {
       this.speed = 100;
     }
     this.start();
-    console.log("speed", this.speed);
   }
 
   pause() {
