@@ -8,12 +8,14 @@
   <body>
     <canvas id="canvas"></canvas>
 
-    <div id="speed">
-      <span>Speed </span><span>{{ value }}</span>
+    <div id="data-panel">
+      <span>Speed </span><span>{{ speed }}</span>
+      <br>
+      <span>Points </span><span>{{ points }}</span>
     </div>
 
-    <div id="points">
-      <span>Points </span><span>{{ value }}</span>
+    <div id="buttons-panel">
+      <button v-on:click="pause">Pause</button>
     </div>
   </body>
 

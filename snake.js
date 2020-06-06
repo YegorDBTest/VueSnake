@@ -84,34 +84,43 @@ class Snake {
     this.squares = new SnakeSquares(squares);
     this.direction = new SnakeDirection(direction);
     this.board = board;
-    this._points = new Vue({
-      el: '#points',
-      data: {value: 0},
-    });
-    this._speed = new Vue({
-      el: '#speed',
-      data: {value: 10},
+    this._data = new Vue({
+      el: '#data-panel',
+      data: {
+        points: 0,
+        speed: 10,
+      },
     });
     this.intervalId = null;
+    this.paused = false;
     this.putOnBoard();
     this.setDirectionChangeEvents();
     this.start();
+
+    new Vue({
+      el: '#buttons-panel',
+      methods: {
+        pause: () => {
+          this.pauseOrStart();
+        },
+      }
+    });
   }
 
   get speed() {
-    return this._speed.value;
+    return this._data.speed;
   }
 
   set speed(value) {
-    this._speed.value = value;
+    this._data.speed = value;
   }
 
   get points() {
-    return this._points.value;
+    return this._data.points;
   }
 
   set points(value) {
-    this._points.value = value;
+    this._data.points = value;
   }
 
   move() {
@@ -156,7 +165,11 @@ class Snake {
 
   setDirectionChangeEvents() {
     document.addEventListener('keydown', (e) => {
-      this.direction.setCurrent(e.keyCode);
+      if (e.keyCode >= 37 && e.keyCode <= 40) {
+        this.direction.setCurrent(e.keyCode);
+      } else if (e.keyCode == 80) {
+        this.pauseOrStart();
+      }
     });
   }
 
@@ -179,6 +192,7 @@ class Snake {
 
   pause() {
     clearInterval(this.intervalId);
+    this.paused = true;
   }
 
   stop() {
@@ -191,5 +205,14 @@ class Snake {
       () => {this.move();},
       5000 / this.speed
     );
+    this.paused = false;
+  }
+
+  pauseOrStart() {
+    if (this.paused) {
+      this.start();
+    } else {
+      this.pause();
+    }
   }
 }
