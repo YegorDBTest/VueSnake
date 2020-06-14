@@ -91,20 +91,31 @@ class Snake {
         speed: 10,
       },
     });
-    this.intervalId = null;
-    this.paused = false;
-    this.putOnBoard();
-    this.setDirectionChangeEvents();
-    this.start();
-
-    new Vue({
+    this._buttons = new Vue({
       el: '#buttons-panel',
+      data: {
+        snake: this,
+        paused: false,
+        pausePlayName: 'Pause',
+      },
       methods: {
-        pause: () => {
-          this.pauseOrStart();
+        pausePlayAction: function() {
+          if (this.paused) {
+            this.snake.start();
+            this.paused = false;
+            this.pausePlayName = 'Pause';
+          } else {
+            this.snake.pause();
+            this.paused = true;
+            this.pausePlayName = 'Play';
+          }
         },
       }
     });
+    this.intervalId = null;
+    this.putOnBoard();
+    this.setDirectionChangeEvents();
+    this.start();
   }
 
   get speed() {
@@ -168,7 +179,7 @@ class Snake {
       if (e.keyCode >= 37 && e.keyCode <= 40) {
         this.direction.setCurrent(e.keyCode);
       } else if (e.keyCode == 80) {
-        this.pauseOrStart();
+        this._buttons.pausePlayAction();
       }
     });
   }
@@ -192,7 +203,6 @@ class Snake {
 
   pause() {
     clearInterval(this.intervalId);
-    this.paused = true;
   }
 
   stop() {
@@ -205,14 +215,5 @@ class Snake {
       () => {this.move();},
       5000 / this.speed
     );
-    this.paused = false;
-  }
-
-  pauseOrStart() {
-    if (this.paused) {
-      this.start();
-    } else {
-      this.pause();
-    }
   }
 }

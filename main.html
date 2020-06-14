@@ -15,7 +15,16 @@
     </div>
 
     <div id="buttons-panel">
-      <button v-on:click="pause">Pause</button>
+      <button v-on:click="pausePlayAction">{{ pausePlayName }}</button>
+      <!-- music on/off -->
+    </div>
+
+    <div id="info-panel">
+      <p>Use arrows to change snake moving direction.</p>
+      <p>Green squares gain points, increase tail and refresh squares.</p>
+      <p>Red squares increase speed and points gain.</p>
+      <p>Blue squares decrease speed and points gain.</p>
+      <p>Violet squares cut tail off.</p>
     </div>
   </body>
 
