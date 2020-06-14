@@ -80,6 +80,8 @@ class Snake {
     for (let squareCoords of squaresCoords) {
       squares.push(board.squares.getFromCoords(...squareCoords))
     }
+    this.started = false;
+    this.ended = false;
     this.state = SQUARE_SNAKE;
     this.squares = new SnakeSquares(squares);
     this.direction = new SnakeDirection(direction);
@@ -100,14 +102,17 @@ class Snake {
       },
       methods: {
         pausePlayAction: function() {
+          if (!this.snake.started || this.snake.ended) return;
           if (this.paused) {
             this.snake.start();
             this.paused = false;
             this.pausePlayName = 'Pause';
+            this.snake.board.cover.deactivate();
           } else {
             this.snake.pause();
             this.paused = true;
             this.pausePlayName = 'Play';
+            this.snake.board.cover.activate('Pause');
           }
         },
       }
@@ -115,7 +120,7 @@ class Snake {
     this.intervalId = null;
     this.putOnBoard();
     this.setDirectionChangeEvents();
-    this.start();
+    this.board.cover.activate('Press Enter to start');
   }
 
   get speed() {
@@ -180,6 +185,10 @@ class Snake {
         this.direction.setCurrent(e.keyCode);
       } else if (e.keyCode == 80) {
         this._buttons.pausePlayAction();
+      } else if (!this.started && e.keyCode == 13) {
+        this.start();
+        this.started = true;
+        this.board.cover.deactivate();
       }
     });
   }
@@ -207,7 +216,9 @@ class Snake {
 
   stop() {
     clearInterval(this.intervalId);
+    this.ended = true;
     this.changeState(SQUARE_STOPPED_SNAKE);
+    this.board.cover.activate('Game over');
   }
 
   start() {

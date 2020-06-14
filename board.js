@@ -117,16 +117,45 @@ class BoardSquares {
 }
 
 
+class Cover {
+  constructor(board) {
+    this.cover = document.getElementById("cover");
+    this.cover.style.top = `${board.canvas.offsetTop}px`;
+    this.cover.style.left = `${board.canvas.offsetLeft}px`;
+    this.cover.style.width = `${board.width}px`;
+    this.cover.style.height = `${board.height}px`;
+
+    let inner = document.createElement("div");
+    inner.style.padding = `${board.height / 2 - 10}px 0px`;
+    this.cover.appendChild(inner);
+
+    this.span = document.createElement("span");
+    this.span.setAttribute('id', 'cover-text');
+    inner.appendChild(this.span);
+  }
+
+  activate(text) {
+    this.cover.classList.add('cover-activated');
+    this.span.innerHTML = text;
+  }
+
+  deactivate() {
+    this.cover.classList.remove('cover-activated');
+    this.span.innerHTML = '';
+  }
+}
+
+
 class Board {
   constructor(maxX, maxY, squareL) {
     this.width = maxX * squareL;
     this.height = maxY * squareL;
 
-    let canvas = document.getElementById("canvas");
-    canvas.setAttribute('width', `${this.width}px`);
-    canvas.setAttribute('height', `${this.height}px`);
+    this.canvas = document.getElementById("canvas");
+    this.canvas.setAttribute('width', `${this.width}px`);
+    this.canvas.setAttribute('height', `${this.height}px`);
 
-    this.ctx = canvas.getContext("2d");
+    this.ctx = this.canvas.getContext("2d");
     this.ctx.clearRect(0, 0, this.width, this.height);
 
     this.squares = new BoardSquares(maxX, maxY, squareL, this);
@@ -136,6 +165,8 @@ class Board {
     this.dropTailSquare = null;
 
     this.toDropTail = DROP_TAIL_PERIODICITY;
+
+    this.cover = new Cover(this);
   }
 
   addThings(occupiedSquares) {
