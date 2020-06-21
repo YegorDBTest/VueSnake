@@ -18,6 +18,10 @@
       #cover-text {
         background-color: rgb(255, 255, 255, 0.75);
       }
+
+      button.active {
+        font-weight: bold;
+      }
     </style>
   </head>
 
@@ -42,6 +46,10 @@
       <p>Red squares increase speed and points gain.</p>
       <p>Blue squares decrease speed and points gain.</p>
       <p>Violet squares cut tail off.</p>
+    </div>
+
+    <div id="levels-panel">
+      <button v-for="key in itemsKeys" v-bind:class="{active: current == key}" v-on:click="current = key">{{key}}</button>
     </div>
   </body>
 

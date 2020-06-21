@@ -117,6 +117,32 @@ class Snake {
         },
       }
     });
+    this._levels = new Vue({
+      el: '#levels-panel',
+      data: {
+        get itemsKeys() {
+          return Object.keys(this.items);
+        },
+        get speedFactor() {
+          return this.items[this.current].speedFactor;
+        },
+        items: {
+          easy: {
+            speedFactor: 0.5,
+          },
+          normal: {
+            speedFactor: 1,
+          },
+          hard: {
+            speedFactor: 1.5,
+          },
+          impossible: {
+            speedFactor:2,
+          },
+        },
+        current: 'easy',
+      },
+    });
     this.intervalId = null;
     this.putOnBoard();
     this.setDirectionChangeEvents();
@@ -129,6 +155,10 @@ class Snake {
 
   set speed(value) {
     this._data.speed = value;
+  }
+
+  get speedFactor() {
+    return this._levels.speedFactor;
   }
 
   get points() {
@@ -158,7 +188,7 @@ class Snake {
 
     if (newHeadState == SQUARE_GROWING) {
       this.board.addThings(this.squares.items.slice());
-      this.points += 10 * this.speed;
+      this.points += 10 * this.speed * this.speedFactor;
     } else if (newHeadState == SQUARE_SPEED_UP_SNAKE) {
       this.changeSpeed(1);
     } else if (newHeadState == SQUARE_SPEED_DOWN_SNAKE) {
@@ -224,7 +254,7 @@ class Snake {
   start() {
     this.intervalId = setInterval(
       () => {this.move();},
-      5000 / this.speed
+      5000 / (1 + (this.speed - 1) * this.speedFactor)
     );
   }
 }
