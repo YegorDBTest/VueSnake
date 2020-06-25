@@ -90,11 +90,15 @@ class BoardSquares {
   constructor(maxX, maxY, squareL, board) {
     this.maxX = maxX;
     this.maxY = maxY;
-    this.items = [];
+    this.squareL = squareL;
+    this.board = board;
+  }
 
-    for (let x = 0; x < maxX; x++) {
-      for (let y = 0; y < maxY; y++) {
-        let square = new Square(x, y, squareL, board);
+  init() {
+    this.items = [];
+    for (let x = 0; x < this.maxX; x++) {
+      for (let y = 0; y < this.maxY; y++) {
+        let square = new Square(x, y, this.squareL, this.board);
         this[square] = square;
         this.items.push(square);
       }
@@ -156,17 +160,18 @@ class Board {
     this.canvas.setAttribute('height', `${this.height}px`);
 
     this.ctx = this.canvas.getContext("2d");
-    this.ctx.clearRect(0, 0, this.width, this.height);
 
     this.squares = new BoardSquares(maxX, maxY, squareL, this);
+    this.cover = new Cover(this);
+  }
 
+  init() {
+    this.ctx.clearRect(0, 0, this.width, this.height);
+    this.squares.init();
     this.speedUpSquare = null;
     this.speedDownSquare = null;
     this.dropTailSquare = null;
-
     this.toDropTail = DROP_TAIL_PERIODICITY;
-
-    this.cover = new Cover(this);
   }
 
   addThings(occupiedSquares) {
