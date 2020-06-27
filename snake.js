@@ -118,6 +118,7 @@ class Snake {
         get speedFactor() {
           return this.items[this.current].speedFactor;
         },
+        snake: this,
         items: {
           relax: {
             speedFactor: 0.5,
@@ -133,6 +134,14 @@ class Snake {
           },
         },
         current: 'relax',
+      },
+      methods: {
+        setCurrent(key) {
+          if (this.snake.started || !this.itemsKeys.includes(key)) {
+            return;
+          }
+          this.current = key;
+        },
       },
     });
     this.setDirectionChangeEvents();

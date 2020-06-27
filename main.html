@@ -49,7 +49,7 @@
     </div>
 
     <div id="levels-panel">
-      <button v-for="key in itemsKeys" v-bind:class="{active: current == key}" v-on:click="current = key">{{key}}</button>
+      <button v-for="key in itemsKeys" v-bind:class="{active: current == key}" v-on:click="setCurrent(key)">{{key}}</button>
     </div>
   </body>
 
