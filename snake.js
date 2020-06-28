@@ -84,6 +84,8 @@ class Snake {
       data: {
         points: 0,
         speed: 10,
+        room: 1,
+        result: 0,
       },
     });
     this._buttons = new Vue({
@@ -166,6 +168,15 @@ class Snake {
 
   set points(value) {
     this._data.points = value;
+    this._data.result = (this.speedFactor * this.points * this.speed / this.room).toFixed(0);
+  }
+
+  get room() {
+    return this._data.room;
+  }
+
+  set room(value) {
+    this._data.room = value;
   }
 
   init() {
@@ -181,6 +192,8 @@ class Snake {
     this.direction = new SnakeDirection(this.initDirection);
     this._data.points = 0;
     this._data.speed = 10;
+    this._data.room = 1;
+    this._data.result = 0;
     this._buttons.paused = false;
     this._buttons.pausePlayName = 'Start';
     this.intervalId = null;
@@ -208,6 +221,7 @@ class Snake {
     if (newHeadState == SQUARE_GROWING) {
       this.board.addThings(this.squares.items.slice());
       this.points += 10 * this.speed * this.speedFactor;
+      this.room += 1;
     } else if (newHeadState == SQUARE_SPEED_UP_SNAKE) {
       this.changeSpeed(1);
     } else if (newHeadState == SQUARE_SPEED_DOWN_SNAKE) {
