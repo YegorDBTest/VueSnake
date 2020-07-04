@@ -41,15 +41,13 @@
 
     <div id="buttons-panel">
       <button v-on:click="pausePlayAction">{{ pausePlayName }}</button>
-      <!-- music on/off -->
     </div>
 
-    <div id="info-panel">
-      <p>Use arrows to change snake moving direction.</p>
-      <p>Green squares gain points, increase tail and refresh squares.</p>
-      <p>Red squares increase speed and points gain.</p>
-      <p>Blue squares decrease speed and points gain.</p>
-      <p>Violet squares cut tail off.</p>
+    <div id="hints-panel">
+      <button v-on:click="previous">previous</button>
+      <button v-on:click="next">next</button>
+      <p>{{ position }}</p>
+      <p>{{ current }}</p>
     </div>
 
     <div id="levels-panel">
@@ -62,5 +60,6 @@
   <script type="text/javascript" src="settings.js"></script>
   <script type="text/javascript" src="board.js"></script>
   <script type="text/javascript" src="snake.js"></script>
+  <script type="text/javascript" src="hints.js"></script>
   <script type="text/javascript" src="main.js"></script>
 </html>
