@@ -7,4 +7,5 @@ var hints = new Hints([
   'Get blue squares to decrease speed and goods gain.',
   'Get violet squares to cut tail off.',
   'Use space to pause/start game.',
+  'Level could be changed only before new game started.',
 ]);
