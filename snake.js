@@ -79,13 +79,18 @@ class Snake {
     this.initSquaresCoords = squaresCoords;
     this.initDirection = direction;
     this.board = board;
+    this._points = new Vue({
+      el: '#points-panel',
+      data: {
+        value: 0,
+      },
+    });
     this._data = new Vue({
       el: '#data-panel',
       data: {
-        points: 0,
+        goods: 0,
         speed: 10,
         room: 1,
-        result: 0,
       },
     });
     this._buttons = new Vue({
@@ -122,20 +127,20 @@ class Snake {
         },
         snake: this,
         items: {
-          relax: {
+          1: {
             speedFactor: 0.5,
           },
-          normal: {
+          2: {
             speedFactor: 1,
           },
-          hard: {
+          3: {
             speedFactor: 1.5,
           },
-          impossible: {
+          4: {
             speedFactor:2,
           },
         },
-        current: 'relax',
+        current: 1,
       },
       methods: {
         setCurrent(key) {
@@ -162,13 +167,13 @@ class Snake {
     return this._levels.speedFactor;
   }
 
-  get points() {
-    return this._data.points;
+  get goods() {
+    return this._data.goods;
   }
 
-  set points(value) {
-    this._data.points = value;
-    this._data.result = (this.speedFactor * this.points * this.speed / this.room).toFixed(0);
+  set goods(value) {
+    this._data.goods = value;
+    this._points.value = (this.speedFactor * this.goods * this.speed / this.room).toFixed(0);
   }
 
   get room() {
@@ -190,10 +195,10 @@ class Snake {
     this.state = SQUARE_SNAKE;
     this.squares = new SnakeSquares(squares);
     this.direction = new SnakeDirection(this.initDirection);
-    this._data.points = 0;
+    this._data.goods = 0;
     this._data.speed = 10;
     this._data.room = 1;
-    this._data.result = 0;
+    this._points.value = 0;
     this._buttons.paused = false;
     this._buttons.pausePlayName = 'Start';
     this.intervalId = null;
@@ -220,7 +225,7 @@ class Snake {
 
     if (newHeadState == SQUARE_GROWING) {
       this.board.addThings(this.squares.items.slice());
-      this.points += 10 * this.speed * this.speedFactor;
+      this.goods += 10 * this.speed * this.speedFactor;
       this.room += 1;
     } else if (newHeadState == SQUARE_SPEED_UP_SNAKE) {
       this.changeSpeed(1);

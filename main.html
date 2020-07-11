@@ -4,54 +4,69 @@
     <meta charset="utf-8">
     <title>Snake</title>
 
-    <style type="text/css">
-      #cover {
-        position: absolute;
-        background-color: rgb(255, 255, 255, 0.5);
-        text-align: center;
-        display: none;
-      }
-      #cover.cover-activated {
-        display: block;
-      }
-
-      #cover-text {
-        background-color: rgb(255, 255, 255, 0.75);
-      }
-
-      button.active {
-        font-weight: bold;
-      }
-    </style>
+    <link rel="stylesheet" href="styles.css">
   </head>
 
   <body>
-    <canvas id="canvas"></canvas>
-    <div id="cover"></div>
+    <div id="content">
+      <div id="left-block" class="global-block">
+        <div id="hints-panel">
+          <h2>Hints</h2>
+          <div id="hints-panel-header" class="with-inlines">
+            <div id="hints-panel-header-position" class="inline-item">
+              {{ position }}
+            </div>
+            <div id="hints-panel-header-controls" class="inline-item right-sticked">
+              <button v-on:click="previous"><</button>
+              <button v-on:click="next">></button>
+            </div>
+          </div>
+          <div id="hints-panel-value">
+            {{ current }}
+          </div>
+        </div>
 
-    <div id="data-panel">
-      <span>Speed </span><span>{{ speed }}</span>
-      <br>
-      <span>Points </span><span>{{ points }}</span>
-      <br>
-      <span>Room </span><span>{{ room }}</span>
-      <br>
-      <span>Result </span><span>{{ result }}</span>
-    </div>
+        <hr>
 
-    <div id="buttons-panel">
-      <button v-on:click="pausePlayAction">{{ pausePlayName }}</button>
-    </div>
+        <div id="buttons-panel">
+          <button v-on:click="pausePlayAction">{{ pausePlayName }}</button>
+        </div>
+      </div>
 
-    <div id="hints-panel">
-      <button v-on:click="previous">previous</button>
-      <button v-on:click="next">next</button>
-      <p>{{ position }}</p>
-      <p>{{ current }}</p>
-    </div>
+      <div id="center-block" class="global-block">
+        <div id="points-panel" class="with-inlines">
+          <div id="points-panel-label" class="inline-item">points</div>
+          <div id="points-panel-value" class="inline-item right-sticked">{{ value }}</div>
+        </div>
 
-    <div id="levels-panel">
-      <button v-for="key in itemsKeys" v-bind:class="{active: current == key}" v-on:click="setCurrent(key)">{{key}}</button>
+        <canvas id="canvas"></canvas>
+        <div id="cover"></div>
+      </div>
+
+      <div id="right-block" class="global-block">
+        <div id="data-panel">
+          <h2>Stats</h2>
+          <div id="data-panel-room" class="with-inlines">
+            <div class="inline-item">room</div>
+            <div class="inline-item right-sticked">{{ room }}</div>
+          </div>
+          <div id="data-panel-speed" class="with-inlines">
+            <div class="inline-item">speed</div>
+            <div class="inline-item right-sticked">{{ speed }}</div>
+          </div>
+          <div id="data-panel-goods" class="with-inlines">
+            <div class="inline-item">goods</div>
+            <div class="inline-item right-sticked">{{ goods }}</div>
+          </div>
+        </div>
+
+        <hr>
+
+        <div id="levels-panel">
+          <h2>Levels</h2>
+          <button v-for="key in itemsKeys" v-bind:class="{active: current == key}" v-on:click="setCurrent(key)">{{key}}</button>
+        </div>
+      </div>
     </div>
   </body>
 

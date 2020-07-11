@@ -1,0 +1,109 @@
+body {
+  color: #322e3d;
+  font-family: Gill Sans Extrabold, sans-serif;
+}
+
+h2 {
+  font-weight: normal;
+  margin-bottom: 10px
+}
+
+hr {
+  border-top: 1px solid #322e3d;
+  margin: 20px 0px;
+}
+
+button {
+  cursor: pointer;
+}
+
+
+#content {
+  width: 611px;
+  margin: auto;
+}
+
+#left-block, #right-block {
+  width: 150px;
+}
+#center-block {
+  width: 300px;
+}
+
+.global-block {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.right-sticked {
+  position: absolute;
+  right: 0px;
+}
+
+.inline-item {
+  display: inline-block;
+}
+
+.with-inlines {
+  position: relative;
+}
+
+
+#cover {
+  position: absolute;
+  background-color: rgb(255, 255, 255, 0.5);
+  text-align: center;
+  display: none;
+}
+#cover.cover-activated {
+  display: block;
+}
+#cover-text {
+  background-color: rgb(255, 255, 255, 0.75);
+}
+
+
+#points-panel {
+  height: 20px;
+}
+
+
+#hints-panel-header-controls > button {
+  border-radius: 10px;
+  border: white;
+  background-color: #cce0e4;
+}
+
+#hints-panel-value {
+  height: 129px;
+  margin-top: 10px;
+  font-size: larger;
+}
+
+#buttons-panel > button{
+  background-color: #e8e98a;
+  border: white;
+  width: 150px;
+  height: 60px;
+  font-size: x-large;
+}
+
+
+#levels-panel > h2 {
+  margin-top: 10px;
+}
+
+#levels-panel > button {
+  width: 55px;
+  height: 55px;
+  border-radius: 100%;
+  border: white;
+  margin: 0px 5px 10px;
+  background-color: #fff0bf;
+  font-size: larger;
+}
+
+#levels-panel > button.active {
+  font-weight: bold;
+  background-color: #ffe17f;
+}
